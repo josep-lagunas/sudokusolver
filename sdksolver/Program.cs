@@ -4,12 +4,15 @@
     {
         static void Main(string[] args)
         {
-            var sudoku = new (int value, bool original)[9, 9];
-            Helper.InitSudoku(sudoku);
+            Helper.InitSudoku(out var sudoku);
             var result = SudokuSolver.Solve(sudoku);
             SudokuSolver.PrintSudokuInConsole(sudoku, result);
 
-            Helper.InitSudoku2(sudoku);
+            Helper.InitSudoku2(out sudoku);
+            result = SudokuSolver.Solve(sudoku);
+            SudokuSolver.PrintSudokuInConsole(sudoku, result);
+            
+            Helper.InitSudoku3(out sudoku);
             result = SudokuSolver.Solve(sudoku);
             SudokuSolver.PrintSudokuInConsole(sudoku, result);
         }

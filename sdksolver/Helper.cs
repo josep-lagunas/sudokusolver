@@ -2,8 +2,9 @@ namespace SudokuSolver
 {
     public class Helper
     {
-        public static void InitSudoku((int value, bool original)[,] sudoku)
+        public static void InitSudoku(out (int value, bool original)[,] sudoku)
         {
+            sudoku = new (int value, bool original)[9, 9];
             InitializeEmptySudokuMatrix(sudoku);
 
             SetSudokuValue(sudoku, 0, 0, (8, true));
@@ -37,8 +38,9 @@ namespace SudokuSolver
             SetSudokuValue(sudoku, 8, 6, (4, true));
         }
 
-        public static void InitSudoku2((int value, bool original)[,] sudoku)
+        public static void InitSudoku2(out (int value, bool original)[,] sudoku)
         {
+            sudoku = new (int value, bool original)[9, 9];
             InitializeEmptySudokuMatrix(sudoku);
 
             SetSudokuValue(sudoku, 0, 0, (5, true));
@@ -79,6 +81,12 @@ namespace SudokuSolver
             SetSudokuValue(sudoku, 8, 4, (8, true));
             SetSudokuValue(sudoku, 8, 7, (7, true));
             SetSudokuValue(sudoku, 8, 8, (9, true));
+        }
+
+        public static void InitSudoku3(out (int value, bool original)[,] sudoku)
+        {
+            sudoku = new (int value, bool original)[25, 25];
+            InitializeEmptySudokuMatrix(sudoku);
         }
 
         private static void SetSudokuValue((int value, bool original)[,] sudoku, int row,

@@ -8,22 +8,39 @@ namespace SudokuSolver
         private static IDictionary<int, ((int row, int col) start, (int row, int col) end)>
             _boundaries;
 
-        private const int N = 9;
-
-        static SudokuSolver()
+        private static void InitBoundaries(int dimension)
         {
-            _boundaries = new Dictionary<int, ((int row, int col) start, (int row, int col) end)>
+            var subMatrixBySideCount = (int) Math.Sqrt(dimension);
+            var offset = subMatrixBySideCount - 1;
+
+            _boundaries = new Dictionary<int, ((int row, int col) start, (int row, int col) end)>();
+
+            var startRow = 0;
+            var startColumn = 0;
+            var endRow = startRow + offset;
+            var endColumn = offset;
+            
+            _boundaries.Add(0, ((startRow, startColumn), (endRow, endColumn)));
+
+            for (var subMatrixIndex = 1;
+                subMatrixIndex < subMatrixBySideCount * subMatrixBySideCount;
+                subMatrixIndex++)
             {
-                {0, ((0, 0), (2, 2))},
-                {1, ((0, 3), (2, 5))},
-                {2, ((0, 6), (2, 8))},
-                {3, ((3, 0), (5, 2))},
-                {4, ((3, 3), (5, 5))},
-                {5, ((3, 6), (5, 8))},
-                {6, ((6, 0), (8, 2))},
-                {7, ((6, 3), (8, 5))},
-                {8, ((6, 6), (8, 8))}
-            };
+                if (subMatrixIndex % subMatrixBySideCount != 0)
+                {
+                    startColumn = startColumn + subMatrixBySideCount;
+                    endColumn = startColumn + offset;
+                    _boundaries.Add(subMatrixIndex, ((startRow, startColumn), (endRow, endColumn)));
+                }
+                else
+                {
+                    startRow = startRow + subMatrixBySideCount;
+                    startColumn = 0;
+                    endRow = startRow + offset;
+                    endColumn = startColumn + offset;
+                    _boundaries.Add(subMatrixIndex, ((startRow, startColumn), (endRow, endColumn)));
+                }
+            }
         }
 
         private static void SetSudokuValue((int value, bool original)[,] sudoku, int row,
@@ -35,6 +52,7 @@ namespace SudokuSolver
         public static (bool solved, long attemptsCounter) Solve(
             (int value, bool original)[,] sudoku)
         {
+            InitBoundaries(GetSudokuWith(sudoku));
             long attemptsCounter = 0;
             var solved = Solve(sudoku, 0, 0, ref attemptsCounter);
             return (solved, attemptsCounter);
@@ -43,9 +61,10 @@ namespace SudokuSolver
         private static bool Solve((int value, bool original)[,] sudoku, int row, int column, ref
             long attemptsCounter)
         {
-            if (column == N)
+            if (column == GetSudokuWith(sudoku))
             {
-                return row + 1 == N || Solve(sudoku, row + 1, 0, ref attemptsCounter);
+                return row + 1 == GetSudokuWith(sudoku) || Solve(sudoku, row + 1, 0, ref
+                           attemptsCounter);
             }
 
             if (sudoku[row, column].value != -1)
@@ -55,7 +74,7 @@ namespace SudokuSolver
 
             var value = 1;
 
-            while (value < 10)
+            while (value <= GetSudokuWith(sudoku))
             {
                 if (RowCanBeSet(sudoku, row, value) &&
                     ColCanBeSet(sudoku, column, value) &&
@@ -78,13 +97,19 @@ namespace SudokuSolver
             return false;
         }
 
+        private static int GetSudokuWith((int value, bool original)[,] sudoku)
+        {
+            return sudoku.GetUpperBound(0) + 1;
+        }
+
         private static bool SubMatrixCanBeSet((int value, bool original)[,] sudoku, int row,
             int column, int value)
         {
-            var subMatrixRow = row / 3;
-            var subMatrixCol = column / 3;
+            var subMatrixBySideCount = (int)  Math.Sqrt(GetSudokuWith(sudoku));
+            var subMatrixRow = row / subMatrixBySideCount;
+            var subMatrixCol = column / subMatrixBySideCount;
 
-            var index = subMatrixRow * 3 + subMatrixCol;
+            var index = subMatrixRow * subMatrixBySideCount + subMatrixCol;
 
             var (start, end) = _boundaries[index];
 
@@ -102,7 +127,7 @@ namespace SudokuSolver
 
         private static bool ColCanBeSet((int value, bool original)[,] sudoku, int column, int value)
         {
-            for (var row = 0; row < N; row++)
+            for (var row = 0; row < GetSudokuWith(sudoku); row++)
             {
                 if (sudoku[row, column].value == value)
                     return false;
@@ -113,7 +138,7 @@ namespace SudokuSolver
 
         private static bool RowCanBeSet((int value, bool original)[,] sudoku, int row, int value)
         {
-            for (var column = 0; column < N; column++)
+            for (var column = 0; column < GetSudokuWith(sudoku); column++)
             {
                 if (sudoku[row, column].value == value)
                     return false;
@@ -131,15 +156,17 @@ namespace SudokuSolver
             Console.WriteLine(
                 $"Sudoku solved: {result.solved}. Number changes attempted: {result.attemptsCounter}");
             Console.WriteLine();
+            
+            var subMatrixBySideCount = (int) Math.Sqrt(GetSudokuWith(sudoku) );
 
-            for (var row = 0; row <= sudoku.GetUpperBound(0); row++)
+            for (var row = 0; row < GetSudokuWith(sudoku); row++)
             {
-                if (row != 0 && row % 3 == 0)
+                if (row != 0 && row % subMatrixBySideCount == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.BackgroundColor = ConsoleColor.White;
                     for (var separator = 0;
-                        separator <= (sudoku.GetUpperBound(0) + 1) * 3 + 1;
+                        separator <= GetSudokuWith(sudoku) * subMatrixBySideCount + 1;
                         separator++)
                     {
                         Console.Write((separator + 1) % 10 == 0 ? "┼" : "─");
@@ -149,7 +176,7 @@ namespace SudokuSolver
                     Console.WriteLine();
                 }
 
-                for (var column = 0; column <= sudoku.GetUpperBound(0); column++)
+                for (var column = 0; column < GetSudokuWith(sudoku); column++)
                 {
                     var field = sudoku[row, column];
                     var value = $" {field.value} ";
@@ -158,7 +185,7 @@ namespace SudokuSolver
                         value = " x ";
                     }
 
-                    if (column != 0 && column % 3 == 0)
+                    if (column != 0 && column %  subMatrixBySideCount == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.BackgroundColor = ConsoleColor.White;
