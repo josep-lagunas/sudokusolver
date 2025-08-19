@@ -137,7 +137,7 @@ namespace SudokuSolver
                 if (row != 0 && row % 3 == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Black;
                     for (var separator = 0;
                         separator <= (sudoku.GetUpperBound(0) + 1) * 3 + 1;
                         separator++)
@@ -145,7 +145,7 @@ namespace SudokuSolver
                         Console.Write((separator + 1) % 10 == 0 ? "┼" : "─");
                     }
 
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine();
                 }
 
@@ -161,11 +161,11 @@ namespace SudokuSolver
                     if (column != 0 && column % 3 == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
                         Console.Write("|");
                     }
 
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
 
                     Console.BackgroundColor = ConsoleColor.White;
                     if (field.original)

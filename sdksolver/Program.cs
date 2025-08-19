@@ -12,6 +12,10 @@
             Helper.InitSudoku2(sudoku);
             result = SudokuSolver.Solve(sudoku);
             SudokuSolver.PrintSudokuInConsole(sudoku, result);
+            
+            Helper.InitSudokuHard(sudoku); 
+            result = SudokuSolver.Solve(sudoku);
+            SudokuSolver.PrintSudokuInConsole(sudoku, result);
         }
     }
 }

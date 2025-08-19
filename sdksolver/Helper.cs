@@ -81,6 +81,44 @@ namespace SudokuSolver
             SetSudokuValue(sudoku, 8, 8, (9, true));
         }
 
+        public static void InitSudokuHard((int value, bool original)[,] sudoku)
+        {
+            InitializeEmptySudokuMatrix(sudoku);
+
+            SetSudokuValue(sudoku, 0, 0, (3, true));
+            SetSudokuValue(sudoku, 0, 7, (4, true));
+
+            SetSudokuValue(sudoku, 1, 2, (7, true));
+            SetSudokuValue(sudoku, 1, 5, (6, true));
+            SetSudokuValue(sudoku, 1, 6, (3, true));
+            SetSudokuValue(sudoku, 1, 8, (9, true));
+
+            SetSudokuValue(sudoku, 2, 1, (8, true));
+            SetSudokuValue(sudoku, 2, 3, (2, true));
+
+            SetSudokuValue(sudoku, 3, 0, (7, true));
+            SetSudokuValue(sudoku, 3, 4, (3, true));
+
+            SetSudokuValue(sudoku, 4, 6, (5, true));
+
+            SetSudokuValue(sudoku, 5, 2, (3, true));
+            SetSudokuValue(sudoku, 5, 5, (9, true));
+            SetSudokuValue(sudoku, 5, 6, (6, true));
+            SetSudokuValue(sudoku, 5, 8, (1, true));
+
+            SetSudokuValue(sudoku, 6, 0, (2, true));
+            SetSudokuValue(sudoku, 6, 3, (6, true));
+            SetSudokuValue(sudoku, 6, 6, (1, true));
+            SetSudokuValue(sudoku, 6, 8, (4, true));
+
+            SetSudokuValue(sudoku, 7, 5, (4, true));
+            SetSudokuValue(sudoku, 7, 7, (7, true));
+
+            SetSudokuValue(sudoku, 8, 2, (1, true));
+            SetSudokuValue(sudoku, 8, 7, (5, true));
+        }
+
+        
         private static void SetSudokuValue((int value, bool original)[,] sudoku, int row,
             int column, (int value, bool original) value)
         {
