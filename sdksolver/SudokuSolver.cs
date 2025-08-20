@@ -125,19 +125,18 @@ namespace SudokuSolver
         public static void PrintSudokuInConsole((int value, bool original)[,] sudoku,
             (bool solved, long attemptsCounter) result)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine();
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine(
                 $"Sudoku solved: {result.solved}. Number changes attempted: {result.attemptsCounter}");
             Console.WriteLine();
-
             for (var row = 0; row <= sudoku.GetUpperBound(0); row++)
             {
+                Console.Write("   ");
                 if (row != 0 && row % 3 == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.White;
                     for (var separator = 0;
                         separator <= (sudoku.GetUpperBound(0) + 1) * 3 + 1;
                         separator++)
@@ -146,7 +145,9 @@ namespace SudokuSolver
                     }
 
                     Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ResetColor();
                     Console.WriteLine();
+                    Console.Write("   ");
                 }
 
                 for (var column = 0; column <= sudoku.GetUpperBound(0); column++)
@@ -161,8 +162,8 @@ namespace SudokuSolver
                     if (column != 0 && column % 3 == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.Write("|");
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Write("│");
                     }
 
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -177,9 +178,13 @@ namespace SudokuSolver
                     Console.Write(value);
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
-
+                Console.ResetColor();
                 Console.WriteLine();
             }
+            
+            Console.WriteLine();
+            Console.WriteLine();
+            
         }
     }
 }
